@@ -1,0 +1,4 @@
+#ignore all .jpg files
+*.jpg
+#ignore all .txt files
+*.txt
