@@ -1,0 +1,15 @@
+click==8.5.0
+cloudpickle==3.1.2
+dlib==20.0.1
+docopt==0.6.2
+face-recognition==1.3.0
+face_recognition_models==0.3.0
+joblib==1.6.0
+narwhals==2.26.0
+numpy==2.5.3
+opencv-python==5.0.0.93
+pillow==12.3.0
+scikit-learn==1.9.1
+scipy==1.18.1
+setuptools==74.1.3
+threadpoolctl==3.6.0
