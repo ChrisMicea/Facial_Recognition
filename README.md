@@ -22,4 +22,4 @@ train_dir/
         .
         person_n_face-n.jpg
 # Then, run the face_recognize_antrenare.py file. This will create encodings.bin and names.bin binary files, thus trainig the AI model
-# Lastly, run the face_recognize_video_final.py file in order to get live video facial recognition
+# Then, run the face_recognize_video_final.py file in order to get live video facial recognition
