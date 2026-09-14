@@ -6,17 +6,39 @@ Interactive mode - waits for user input commands.
 """
 
 import sys
+import os
+
+
+def check_encodings_status():
+    """Check if encodings and names files exist."""
+    encodings_path = "encodings.bin"
+    names_path = "names.bin"
+    
+    encodings_exist = os.path.exists(encodings_path)
+    names_exist = os.path.exists(names_path)
+    
+    if encodings_exist and names_exist:
+        return " Trained model found (encodings.bin + names.bin)"
+    elif encodings_exist:
+        return " Partial model found (encodings.bin only)"
+    elif names_exist:
+        return " Partial model found (names.bin only)"
+    else:
+        return " No trained model found"
 
 
 def print_usage():
     """Print usage information."""
+    status = check_encodings_status()
     print("\n" + "="*50)
     print("Facial Recognition Hub - Interactive Mode")
     print("="*50)
+    print(f"\nModel Status: {status}")
     print("\nAvailable commands:")
     print("  train <train_dir>    - Train model with images from directory")
     print("  test <test_image>    - Test recognition on a static image")
     print("  video                - Run real-time video face recognition")
+    print("  status               - Check model status")
     print("  h/help               - Show this help message")
     print("  q/exit/quit          - Exit the program")
     print("\nExample:")
@@ -45,6 +67,9 @@ def main():
             
             elif command in ['h', 'help']:
                 print_usage()
+            
+            elif command == 'status':
+                print(f"\nModel Status: {check_encodings_status()}\n")
             
             elif command == 'train':
                 if len(parts) < 2:
