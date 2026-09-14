@@ -1,38 +1,31 @@
 """
-Usage:
-  face_recognize_run.py
-  
-Options:
-  -h, --help                     Show this help
+Video face recognition module.
+Loads pre-trained encodings and performs real-time face recognition on webcam feed.
 """
-  
+
 # importing libraries
 import face_recognition
 import cv2
-import sys
-import docopt
 from sklearn import svm
-import os
-from array import array
-import numpy as np
 import joblib
+import os
 
-# define a video capture object
-encodings = []
-names = []
+# Get the project root directory (parent of src/)
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-def face_recognize_antrenat(test, encodings, names):
+
+def recognize_faces_in_frame(frame, encodings, names):
     # Create and train the SVC classifier
     clf = svm.SVC(gamma ='scale')
     clf.fit(encodings, names)
 
     # Load the test image with unknown faces into a numpy array
-    #test_image = face_recognition.load_image_file(test)
-    test_image = test
+    #test_image = face_recognition.load_image_file(frame)
+    test_image = frame
     face_locations = face_recognition.face_locations(test_image)
     face_encodings = face_recognition.face_encodings(test_image, face_locations)
     no = len(face_locations)
-    cv2.putText(test ,"Number of faces detected: " + str(no), (20, 20), cv2.FONT_HERSHEY_PLAIN, 1, (127, 255, 0), 2)
+    cv2.putText(frame ,"Number of faces detected: " + str(no), (20, 20), cv2.FONT_HERSHEY_PLAIN, 1, (127, 255, 0), 2)
     
     # Find all the faces and face encodings in the current frame of video
     face_names = []
@@ -49,18 +42,20 @@ def face_recognize_antrenat(test, encodings, names):
 
     for (top, right, bottom, left), name in zip(face_locations, face_names):
         # Draw a box around the face
-        cv2.rectangle(test, (left, top), (right, bottom), (255, 69, 0), 2)
+        cv2.rectangle(frame, (left, top), (right, bottom), (255, 69, 0), 2)
         # Draw a label with a name below the face
-        cv2.putText(test, str(name), (left + 6, bottom - 6), cv2.FONT_HERSHEY_PLAIN, 1.0, (127, 255, 0), 2)
+        cv2.putText(frame, str(name), (left + 6, bottom - 6), cv2.FONT_HERSHEY_PLAIN, 1.0, (127, 255, 0), 2)
 
-    cv2.putText(test ,"Press 'esc' to exit", (450, 20), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 2)
-    cv2.imshow('Video Footage', test)
+    cv2.putText(frame ,"Press 'esc' to exit", (450, 20), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 2)
+    cv2.imshow('Video Footage', frame)
 
-def main():
-    args = docopt.docopt(__doc__)
+
+def run_video_recognition():
     #read encodings from file
-    encodings = joblib.load("encodings.bin")
-    names = joblib.load("names.bin")
+    encodings_path = os.path.join(PROJECT_ROOT, "encodings.bin")
+    names_path = os.path.join(PROJECT_ROOT, "names.bin")
+    encodings = joblib.load(encodings_path)
+    names = joblib.load(names_path)
     vid = cv2.VideoCapture(0)
     while(True):
         # Capture the video frame
@@ -75,13 +70,8 @@ def main():
         # desired button of your choice
         if cv2.waitKey(1) & 0xFF == ord(chr(27).encode()):
             break
-        face_recognize_antrenat(frame, encodings, names)
+        recognize_faces_in_frame(frame, encodings, names)
     # After the loop release the cap object
     vid.release()
     # Destroy all the windows
     cv2.destroyAllWindows()
-
-    
-
-if __name__=="__main__":
-    main()

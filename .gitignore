@@ -3,6 +3,11 @@
 # ignore all .bin files
 *.bin
 
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[codz]
+*$py.class
+
 train_dir/
 
 # Environments
